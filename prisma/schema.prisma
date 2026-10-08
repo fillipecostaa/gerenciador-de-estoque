@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum MovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+model User {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  email        String     @unique
+  name         String
+  password     String
+  role         Role       @default(USER)
+  active       Boolean    @default(true)
+  tokenVersion Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  movements    Movement[]
+
+  @@index([role, active])
+}
+
+model Product {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String     @default("")
+  category    String
+  priceCents  Int
+  stock       Int        @default(0)
+  minStock    Int        @default(0)
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  movements   Movement[]
+
+  @@index([active, category])
+  @@index([name])
+}
+
+model Movement {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  productId   String       @db.ObjectId
+  userId      String       @db.ObjectId
+  type        MovementType
+  quantity    Int
+  delta       Int
+  reason      String
+  stockBefore Int
+  stockAfter  Int
+  productName String
+  userName    String
+  createdAt   DateTime     @default(now())
+  product     Product      @relation(fields: [productId], references: [id])
+  user        User         @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([productId, createdAt])
+  @@index([createdAt])
+}
+
+// Serializa as operações que podem alterar o conjunto de administradores.
+model SystemState {
+  id      String @id @map("_id")
+  version Int    @default(0)
+}

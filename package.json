@@ -1,0 +1,46 @@
+{
+  "name": "loginscreen",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Gerenciamento de estoque compartilhado com autenticação e permissões",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently -k -n API,WEB -c green,cyan \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "node --watch-path=server.js --watch-path=app.js --watch-path=routes --watch-path=controllers --watch-path=services --watch-path=middlewares --watch-path=lib --watch-path=.env server.js",
+    "dev:client": "vite",
+    "build": "vite build",
+    "start": "node server.js",
+    "db:generate": "prisma generate",
+    "db:check": "node scripts/check-db.js",
+    "db:setup": "prisma generate && node scripts/setup-db.js",
+    "create-admin": "node scripts/create-admin.js",
+    "test": "npm run test:backend && npm run test:ui",
+    "test:backend": "node --test --test-concurrency=1 backend-tests/*.test.js",
+    "test:unit": "node --test backend-tests/auth.test.js backend-tests/admin-cli.test.js backend-tests/errors.test.js",
+    "test:ui": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@inquirer/prompts": "^8.7.3",
+    "@prisma/client": "6.19",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.5.0",
+    "node": "^26.7.0",
+    "prisma": "6.19",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router": "^8.4.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
+    "mongodb-memory-server": "^11.3.0",
+    "vite": "^8.3.1"
+  }
+}
