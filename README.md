@@ -7,12 +7,14 @@ O projeto foi criado para aplicar conceitos de desenvolvimento web, APIs REST, a
 ## Tecnologias
 
 **Frontend**
+
 - React
 - JavaScript
 - Vite
 - CSS
 
 **Backend**
+
 - Node.js
 - Express
 - Prisma ORM
@@ -79,11 +81,13 @@ DATABASE_URL="mongodb+srv://usuario:senha@cluster.mongodb.net/gerenciador?retryW
 
 Substitua os valores de exemplo pelas credenciais e pelo endereço do seu cluster.
 
-Após configurar a conexão, gere o Prisma Client:
+Após configurar a conexão, gere o Prisma Client na raiz do projeto:
 
 ```bash
-npx prisma generate
+npm run db:generate
 ```
+
+Esse comando executa o script de geração do Prisma Client definido no `package.json`, preparando o cliente utilizado pelo backend para acessar o banco de dados.
 
 O arquivo `.env` contém informações sensíveis e não deve ser enviado ao GitHub.
 
@@ -123,13 +127,21 @@ Instale as dependências do frontend:
 ```bash
 cd frontend
 npm install
+cd ..
 ```
 
 Configure as variáveis de ambiente utilizando o `.env.example` como referência e seguindo as instruções da seção de banco de dados.
 
+Gere o Prisma Client:
+
+```bash
+npm run db:generate
+```
+
 Para iniciar o frontend:
 
 ```bash
+cd frontend
 npm run dev
 ```
 
