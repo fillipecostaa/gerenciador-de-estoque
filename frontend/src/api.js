@@ -1,5 +1,15 @@
 const TOKEN_KEY = 'gerenciamento.token';
 
+const configuredApiUrl = import.meta.env.PROD ? import.meta.env.VITE_API_URL?.trim() : '';
+const API_BASE_URL = configuredApiUrl
+  ? `${configuredApiUrl.replace(/\/+$/, '').replace(/\/api$/i, '')}/api`
+  : '/api';
+
+function buildApiUrl(path) {
+  const normalizedPath = String(path).replace(/^\/+/, '').replace(/^api(?:\/+|$)/i, '');
+  return `${API_BASE_URL}${normalizedPath ? `/${normalizedPath}` : ''}`;
+}
+
 export function getToken() {
   return sessionStorage.getItem(TOKEN_KEY);
 }
@@ -12,7 +22,7 @@ export function setToken(token) {
 export async function api(path, { method = 'GET', body, token = getToken(), signal } = {}) {
   let response;
   try {
-    response = await fetch(`/api${path}`, {
+    response = await fetch(buildApiUrl(path), {
       method,
       headers: { ...(body !== undefined && { 'Content-Type': 'application/json' }), ...(token && { Authorization: `Bearer ${token}` }) },
       ...(body !== undefined && { body: JSON.stringify(body) }),
