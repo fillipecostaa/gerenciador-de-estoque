@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createPublicRoutes } from './routes/public.js';
@@ -11,6 +12,20 @@ import { createAuth, requireRole } from './middlewares/auth.js';
 import { createUsersService } from './services/users.service.js';
 import { errorHandler } from './lib/errors.js';
 
+const allowedOrigins = new Set([
+  'https://gerenciador-de-estoque-frontend-kbz.vercel.app',
+  'https://gerenciador-de-estoque-frontend-kbzr-k4iiqj6-flp18.vercel.app',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+]);
+
+const corsOptions = {
+  origin: (origin, callback) => callback(null, !origin || allowedOrigins.has(origin)),
+  methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
 export function createApp({ prisma, jwtSecret, serveFrontend = true }) {
   if (!prisma || !jwtSecret) throw new Error('Configure DATABASE_URL e JWT_SECRET antes de iniciar.');
   const app = express();
@@ -21,6 +36,8 @@ export function createApp({ prisma, jwtSecret, serveFrontend = true }) {
     if (req.path.startsWith('/api')) res.setHeader('Cache-Control', 'no-store');
     next();
   });
+  // O middleware encerra preflights OPTIONS antes da autenticação e das rotas da API.
+  app.use('/api', cors(corsOptions));
   app.use(express.json({ limit: '32kb' }));
   const auth = createAuth({ prisma, jwtSecret });
   app.use('/api', createPublicRoutes({ prisma, jwtSecret }));
