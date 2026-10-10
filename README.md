@@ -4,23 +4,28 @@ Aplicação fullstack para gerenciamento de produtos e controle de estoque, dese
 
 O projeto foi criado para aplicar conceitos de desenvolvimento web, APIs REST, autenticação e persistência de dados.
 
+**Acesse o projeto:** [Gerenciador de Estoque — Site Online](https://gerenciador-de-estoque-frontend-kbz.vercel.app/login)
+
 ## Tecnologias
 
 **Frontend**
-
 - React
 - JavaScript
 - Vite
 - CSS
 
 **Backend**
-
 - Node.js
 - Express
 - Prisma ORM
 - MongoDB
 - JWT
 - bcrypt
+
+**Hospedagem**
+- Vercel — Frontend
+- Render — Backend
+- MongoDB Atlas — Banco de dados
 
 ## Funcionalidades
 
